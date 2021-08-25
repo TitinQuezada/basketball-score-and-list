@@ -57,51 +57,58 @@ class PlayersPage extends StatelessWidget {
       ApplicationIcon(
         Icons.edit,
         color: Colors.amber,
-        onTap: () => print('editando ${player.id}'),
+        onTap: () => _editPlayer(context, player),
       ),
       SizedBox(
         width: 10,
       ),
-      ApplicationIcon(Icons.delete,
-          color: Colors.red, onTap: () => _showDeleteDialog(context, player)),
+      ApplicationIcon(
+        Icons.delete,
+        color: Colors.red,
+        onTap: () => _showDeleteDialog(context, player),
+      ),
     ];
   }
 
   void _addPlayer(BuildContext context) {
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => SimpleDialog(
-              title: Text('Agregar jugador'),
-              children: [PlayerForm()],
-            ));
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => SimpleDialog(
+        title: Text('Agregar jugador'),
+        children: [PlayerForm()],
+      ),
+    );
   }
 
   void _showDeleteDialog(BuildContext context, Player player) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text('Esta seguro que desea eliminar a ${player.name}?'),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlinedButton(
-                        onPressed: () => _deletePlayer(context, player),
-                        child: Text('Si')),
-                    SizedBox(width: 15.0),
-                    OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('No', style: TextStyle(color: Colors.white)),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.redAccent),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ));
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Esta seguro que desea eliminar a ${player.name}?'),
+        actions: [_buildDeleteActions(context, player)],
+      ),
+    );
+  }
+
+  Widget _buildDeleteActions(BuildContext context, Player player) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        OutlinedButton(
+          onPressed: () => _deletePlayer(context, player),
+          child: Text('Si'),
+        ),
+        SizedBox(width: 15.0),
+        OutlinedButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('No', style: TextStyle(color: Colors.white)),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+          ),
+        ),
+      ],
+    );
   }
 
   void _deletePlayer(BuildContext context, Player player) {
@@ -111,5 +118,16 @@ class PlayersPage extends StatelessWidget {
     playerProvider.removePlayer(player);
 
     Navigator.pop(context);
+  }
+
+  void _editPlayer(BuildContext context, Player player) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => SimpleDialog(
+        title: Text('Agregar jugador'),
+        children: [PlayerForm(player: player)],
+      ),
+    );
   }
 }

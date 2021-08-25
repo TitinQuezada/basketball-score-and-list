@@ -16,6 +16,14 @@ class PlayersProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void editPlayer(Player player) {
+    Player playerResult =
+        _players.firstWhere((element) => element.id == player.id);
+
+    playerResult.name = player.name;
+    notifyListeners();
+  }
+
   void removePlayer(Player player) {
     _players.remove(player);
     notifyListeners();

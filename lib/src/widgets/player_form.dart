@@ -36,6 +36,10 @@ class _PlayerFormState extends State<PlayerForm> {
   }
 
   Widget _builForm(BuildContext context) {
+    if (this.widget.player != null) {
+      nameController.text = this.widget.player!.name;
+    }
+
     return TextField(
       decoration: InputDecoration(labelText: 'Nombre del jugador'),
       controller: nameController,
@@ -46,7 +50,12 @@ class _PlayerFormState extends State<PlayerForm> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        OutlinedButton(onPressed: () => _add(context), child: Text('Agregar')),
+        if (this.widget.player == null)
+          OutlinedButton(
+              onPressed: () => _add(context), child: Text('Agregar')),
+        if (this.widget.player != null)
+          OutlinedButton(
+              onPressed: () => _edit(context), child: Text('Editar')),
         SizedBox(
           width: 20,
         ),
@@ -66,13 +75,21 @@ class _PlayerFormState extends State<PlayerForm> {
 
   void _cancel(BuildContext context) {
     Navigator.pop(context);
-    nameController.dispose();
   }
 
   void _add(BuildContext context) {
     PlayersProvider playerProvider =
         Provider.of<PlayersProvider>(context, listen: false);
     playerProvider.addPlayer(nameController.text);
+    Navigator.pop(context);
+  }
+
+  void _edit(BuildContext context) {
+    PlayersProvider playerProvider =
+        Provider.of<PlayersProvider>(context, listen: false);
+
+    Player playerResult = Player(widget.player!.id, nameController.text);
+    playerProvider.editPlayer(playerResult);
     Navigator.pop(context);
   }
 

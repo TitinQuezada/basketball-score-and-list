@@ -1,6 +1,6 @@
 class Player {
   final String id;
-  final String name;
+  String name;
 
-  const Player(this.id, this.name);
+  Player(this.id, this.name);
 }
